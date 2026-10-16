@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corazones & Detalles - Catálogo Exclusivo</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Dancing Script / Playfair -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+          colors: {
+            brand: {
+              rose: '#ffe4e6',
+              soft: '#f43f5e',
+              red: '#e11d48',
+              deep: '#9f1239',
+              bg: '#fff1f2'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Animación de latido sutil */
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+    .heart-beat {
+      animation: heartbeat 2s infinite ease-in-out;
+    }
+    
+    /* Efecto al marcar favorito */
+    @keyframes popHeart {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+    .pop-anim {
+      animation: popHeart 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+  </style>
+</head>
+<body class="bg-rose-50/50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="bg-white/80 backdrop-blur-md border-b border-rose-100 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-rose-100 text-rose-600 heart-beat shadow-sm">
+          <svg class="w-6 h-6 fill-current text-rose-500" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </span>
+        <div>
+          <h1 class="text-xl sm:text-2xl font-serif font-bold text-rose-900 tracking-tight leading-none">Amour & Co.</h1>
+          <p class="text-xs text-rose-500 font-medium">Colección de Corazones</p>
+        </div>
+      </div>
+
+      <!-- Contador de Favoritos / Deseos -->
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-full text-rose-700 text-sm font-semibold shadow-xs">
+          <svg class="w-4 h-4 fill-rose-500 text-rose-500" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span id="fav-count">0</span>
+          <span class="hidden sm:inline text-xs text-rose-600 font-normal">favoritos</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="bg-gradient-to-b from-rose-100/70 via-rose-50/40 to-transparent py-10 px-4 text-center">
+    <div class="max-w-3xl mx-auto">
+      <span class="inline-block py-1 px-3 rounded-full bg-rose-200/60 text-rose-700 text-xs font-semibold uppercase tracking-wider mb-2">
+        Catálogo Especial San Valentín & Recuerdos
+      </span>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-800 leading-tight">
+        Piezas diseñadas con <span class="text-rose-600 underline decoration-rose-300">corazón</span>
+      </h2>
+      <p class="mt-3 text-slate-600 text-sm sm:text-base max-w-xl mx-auto">
+        Explora nuestra selección en joyería fina, detalles románticos y elementos decorativos con formas de corazón.
+      </p>
+
+      <!-- Barra de Filtros de Categoría -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-2" id="filter-container">
+        <button onclick="filterCategory('todos')" data-category="todos" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm bg-rose-600 text-white shadow-rose-200">
+          Todos los artículos
+        </button>
+        <button onclick="filterCategory('joyeria')" data-category="joyeria" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-slate-600 hover:bg-rose-50 border border-rose-200">
+          Joyería
+        </button>
+        <button onclick="filterCategory('regalos')" data-category="regalos" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-slate-600 hover:bg-rose-50 border border-rose-200">
+          Regalos
+        </button>
+        <button onclick="filterCategory('decoracion')" data-category="decoracion" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-slate-600 hover:bg-rose-50 border border-rose-200">
+          Decoración
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CATÁLOGO GRID ==================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Los productos se inyectan dinámicamente vía JavaScript -->
+    </div>
+
+    <!-- Estado vacío si no hay coincidencias -->
+    <div id="empty-state" class="hidden text-center py-16">
+      <div class="w-16 h-16 mx-auto mb-3 text-rose-300">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <p class="text-slate-600 text-lg font-medium">No se encontraron productos en esta categoría.</p>
+    </div>
+  </main>
+
+  <!-- ==================== MODAL DE DETALLE ==================== -->
+  <div id="modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-rose-100 transform transition-all">
+      <div class="relative bg-gradient-to-tr from-rose-100 via-rose-50 to-pink-100 p-8 flex items-center justify-center">
+        <button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center transition shadow-sm">
+          ✕
+        </button>
+        <div id="modal-art" class="w-36 h-36 flex items-center justify-center drop-shadow-md">
+          <!-- Ilustración dinámica -->
+        </div>
+      </div>
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span id="modal-category" class="text-xs uppercase tracking-wider font-semibold text-rose-500 bg-rose-50 px-2.5 py-1 rounded-full">Categoría</span>
+          <span id="modal-price" class="text-xl font-bold text-rose-600 font-sans">$0.00</span>
+        </div>
+        <h3 id="modal-title" class="text-2xl font-serif font-bold text-slate-800">Nombre de Producto</h3>
+        <p id="modal-description" class="mt-2 text-slate-600 text-sm leading-relaxed">Descripción detallada del producto.</p>
+        
+        <div class="mt-6 flex gap-3">
+          <button onclick="closeModal()" class="w-full py-2.5 px-4 rounded-xl border border-rose-200 text-rose-700 font-medium hover:bg-rose-50 transition text-sm">
+            Cerrar
+          </button>
+          <button onclick="triggerModalFav()" id="modal-fav-btn" class="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium transition shadow-md shadow-rose-200 text-sm flex items-center justify-center space-x-2">
+            <span>Añadir a deseos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-rose-100 py-6 text-center text-xs text-slate-500 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p>© 2026 Amour & Co. Diseñado con temática de corazones.</p>
+      <div class="flex items-center space-x-1 text-rose-500 font-medium">
+        <span>Hecho con amor y pasión</span>
+        <svg class="w-4 h-4 fill-current inline" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // Listado de datos de catálogo con ilustraciones SVG personalizadas
+    const products = [
+      {
+        id: 1,
+        title: "Collar Dije Rubí",
+        category: "joyeria",
+        categoryName: "Joyería",
+        price: "$45.00",
+        description: "Colgante chapado en oro rosa de 18k con un cristal tallado en forma de corazón color escarlata brillante.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24">
+                <circle cx="50" cy="50" r="42" fill="#fff" opacity="0.6"/>
+                <path d="M50 20 L50 40" stroke="#f43f5e" stroke-width="2" stroke-dasharray="2,2"/>
+                <path d="M50 78 C30 60, 20 48, 20 36 C20 26, 28 20, 37 20 C43 20, 48 24, 50 28 C52 24, 57 20, 63 20 C72 20, 80 26, 80 36 C80 48, 70 60, 50 78 Z" fill="#e11d48"/>
+                <path d="M43 32 C38 32, 32 36, 32 42" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.8"/>
+              </svg>`
+      },
+      {
+        id: 2,
+        title: "Lámpara de Neón Corazón",
+        category: "decoracion",
+        categoryName: "Decoración",
+        price: "$28.50",
+        description: "Luz ambiental nocturna con silueta de corazón en tono magenta cálido. Ideal para mesas y escritorios.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24">
+                <rect x="42" y="75" width="16" height="15" rx="3" fill="#64748b"/>
+                <path d="M50 72 C32 56, 22 45, 22 34 C22 24, 29 18, 38 18 C44 18, 48 22, 50 25 C52 22, 56 18, 62 18 C71 18, 78 24, 78 34 C78 45, 68 56, 50 72 Z" fill="none" stroke="#fb7185" stroke-width="6" stroke-linecap="round" filter="drop-shadow(0 0 6px #f43f5e)"/>
+              </svg>`
+      },
+      {
+        id: 3,
+        title: "Caja de Bombones 'Valentine'",
+        category: "regalos",
+        categoryName: "Regalos",
+        price: "$19.99",
+        description: "Elegante caja roja aterciopelada en forma de corazón rellena de trufas artesanales de chocolate belga.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24">
+                <path d="M50 82 C28 64, 16 50, 16 36 C16 23, 26 16, 37 16 C44 16, 48 21, 50 25 C52 21, 56 16, 63 16 C74 16, 84 23, 84 36 C84 50, 72 64, 50 82 Z" fill="#9f1239"/>
+                <path d="M22 36 Q 50 50 78 36" stroke="#fbbf24" stroke-width="4" fill="none"/>
+                <circle cx="50" cy="45" r="5" fill="#f59e0b"/>
+              </svg>`
+      },
+      {
+        id: 4,
+        title: "Aretes Candonga Amor",
+        category: "joyeria",
+        categoryName: "Joyería",
+        price: "$32.00",
+        description: "Pendientes en plata de ley con aros continuos y sutiles colgantes dobles con diseño de corazones entrelazados.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24">
+                <circle cx="38" cy="38" r="14" fill="none" stroke="#cbd5e1" stroke-width="3"/>
+                <path d="M38 65 C26 54, 20 46, 20 38 C20 32, 24 28, 29 28 C33 28, 36 30, 38 33 C40 30, 43 28, 47 28 C52 28, 56 32, 56 38 C56 46, 50 54, 38 65 Z" fill="#fda4af"/>
+                <circle cx="68" cy="38" r="14" fill="none" stroke="#cbd5e1" stroke-width="3"/>
+                <path d="M68 65 C56 54, 50 46, 50 38 C50 32, 54 28, 59 28 C63 28, 66 30, 68 33 C70 30, 73 28, 77 28 C82 28, 86 32, 86 38 C86 46, 80 54, 68 65 Z" fill="#f43f5e"/>
+              </svg>`
+      },
+      {
+        id: 5,
+        title: "Cojín Terciopelo Rosa",
+        category: "decoracion",
+        categoryName: "Decoración",
+        price: "$22.00",
+        description: "Cojín ultra suave acolchado, textura de felpa y tono pastel, confeccionado para máxima suavidad y confort.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24">
+                <path d="M50 82 C22 62, 12 48, 12 34 C12 21, 23 14, 35 14 C42 14, 47 18, 50 23 C53 18, 58 14, 65 14 C77 14, 88 21, 88 34 C88 48, 78 62, 50 82 Z" fill="#f472b6"/>
+                <circle cx="50" cy="46" r="4" fill="#db2777" opacity="0.4"/>
+              </svg>`
+      },
+      {
+        id: 6,
+        title: "Vela Aromática 'Dulce Abrazo'",
+        category: "regalos",
+        categoryName: "Regalos",
+        price: "$16.50",
+        description: "Vela de cera de soja con esencia a vainilla y fresa fresca en envase cerámico moldeado como corazón.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24">
+                <path d="M50 18 Q 54 10 50 6 Q 46 10 50 18 Z" fill="#f59e0b"/>
+                <rect x="49" y="18" width="2" height="6" fill="#475569"/>
+                <path d="M50 84 C30 68, 20 54, 20 42 C20 30, 30 24, 39 24 C45 24, 48 27, 50 31 C52 27, 55 24, 61 24 C70 24, 80 30, 80 42 C80 54, 70 68, 50 84 Z" fill="#fecdd3" stroke="#f43f5e" stroke-width="2"/>
+              </svg>`
+      },
+      {
+        id: 7,
+        title: "Anillo Silueta Promesa",
+        category: "joyeria",
+        categoryName: "Joyería",
+        price: "$38.00",
+        description: "Anillo minimalista y ajustable con contorno delicado de corazón pulido a mano.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24">
+                <ellipse cx="50" cy="58" rx="32" ry="16" fill="none" stroke="#e2e8f0" stroke-width="4"/>
+                <path d="M50 48 C42 38, 36 32, 36 26 C36 20, 40 16, 45 16 C48 16, 49 18, 50 20 C51 18, 52 16, 55 16 C60 16, 64 20, 64 26 C64 32, 58 38, 50 48 Z" fill="#fb7185"/>
+              </svg>`
+      },
+      {
+        id: 8,
+        title: "Taza de Cerámica Enamorados",
+        category: "regalos",
+        categoryName: "Regalos",
+        price: "$14.00",
+        description: "Mug artesanal con asa moldeada en silueta de corazón y relieve satinado color crema y frambuesa.",
+        svg: `<svg viewBox="0 0 100 100" class="w-24 h-24">
+                <path d="M68 35 C78 25, 88 35, 80 48 C74 56, 68 62, 68 62" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round"/>
+                <rect x="25" y="30" width="45" height="42" rx="8" fill="#ffe4e6" stroke="#f43f5e" stroke-width="2"/>
+                <path d="M47 54 C42 49, 39 46, 39 42 C39 39, 41 37, 44 37 C46 37, 47 38, 47 39 C47 38, 48 37, 50 37 C53 37, 55 39, 55 42 C55 46, 52 49, 47 54 Z" fill="#e11d48"/>
+              </svg>`
+      }
+    ];
+
+    // Estado local para favoritos y producto activo
+    const favorites = new Set();
+    let currentFilter = 'todos';
+    let currentModalProductId = null;
+
+    // Renderizar productos en pantalla
+    function renderProducts() {
+      const grid = document.getElementById('product-grid');
+      const emptyState = document.getElementById('empty-state');
+      
+      const filtered = currentFilter === 'todos' 
+        ? products 
+        : products.filter(p => p.category === currentFilter);
+
+      grid.innerHTML = '';
+
+      if (filtered.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      filtered.forEach(product => {
+        const isFav = favorites.has(product.id);
+        const card = document.createElement('article');
+        card.className = "bg-white rounded-2xl overflow-hidden border border-rose-100 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group relative";
+
+        card.innerHTML = `
+          <!-- Área de ilustración SVG -->
+          <div class="relative bg-gradient-to-b from-rose-50/70 to-pink-50/30 p-6 flex items-center justify-center h-48 border-b border-rose-50 overflow-hidden cursor-pointer" onclick="openModal(${product.id})">
+            <div class="transform group-hover:scale-110 transition-transform duration-300">
+              ${product.svg}
+            </div>
+            
+            <!-- Etiqueta de categoría -->
+            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-rose-700 text-[11px] font-semibold tracking-wide uppercase px-2.5 py-0.5 rounded-full border border-rose-100 shadow-xs">
+              ${product.categoryName}
+            </span>
+          </div>
+
+          <!-- Botón flotante Me Gusta -->
+          <button 
+            onclick="toggleFavorite(${product.id}, event)" 
+            class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 shadow-sm border border-rose-100 flex items-center justify-center text-slate-400 hover:text-rose-500 transition active:scale-95"
+            title="Añadir a lista de deseos"
+            aria-label="Guardar en favoritos"
+          >
+            <svg class="w-5 h-5 transition-colors duration-200 ${isFav ? 'fill-rose-500 text-rose-500 pop-anim' : 'fill-none stroke-current stroke-2'}" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+          </button>
+
+          <!-- Detalles de contenido -->
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="text-base font-semibold text-slate-800 font-sans group-hover:text-rose-600 transition-colors">
+                ${product.title}
+              </h3>
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                ${product.description}
+              </p>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-rose-50 flex items-center justify-between">
+              <span class="text-lg font-bold text-rose-600 font-sans tracking-tight">
+                ${product.price}
+              </span>
+              <button 
+                onclick="openModal(${product.id})" 
+                class="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition"
+              >
+                Ver detalle
+              </button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Filtrar productos por categoría
+    function filterCategory(category) {
+      currentFilter = category;
+      
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => {
+        const cat = btn.getAttribute('data-category');
+        if (cat === category) {
+          btn.className = "filter-btn px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm bg-rose-600 text-white shadow-rose-200";
+        } else {
+          btn.className = "filter-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-slate-600 hover:bg-rose-50 border border-rose-200";
+        }
+      });
+
+      renderProducts();
+    }
+
+    // Alternar Favorito / Me Gusta
+    function toggleFavorite(id, event) {
+      if (event) {
+        event.stopPropagation();
+      }
+
+      if (favorites.has(id)) {
+        favorites.delete(id);
+      } else {
+        favorites.add(id);
+      }
+
+      document.getElementById('fav-count').textContent = favorites.size;
+      renderProducts();
+      updateModalFavButton();
+    }
+
+    // Abrir Modal
+    function openModal(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+
+      currentModalProductId = id;
+      document.getElementById('modal-art').innerHTML = product.svg;
+      document.getElementById('modal-title').textContent = product.title;
+      document.getElementById('modal-category').textContent = product.categoryName;
+      document.getElementById('modal-price').textContent = product.price;
+      document.getElementById('modal-description').textContent = product.description;
+
+      updateModalFavButton();
+
+      const modal = document.getElementById('modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    // Cerrar Modal
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      currentModalProductId = null;
+    }
+
+    function triggerModalFav() {
+      if (currentModalProductId !== null) {
+        toggleFavorite(currentModalProductId);
+      }
+    }
+
+    function updateModalFavButton() {
+      const btn = document.getElementById('modal-fav-btn');
+      if (!btn || currentModalProductId === null) return;
+
+      const isFav = favorites.has(currentModalProductId);
+      if (isFav) {
+        btn.innerHTML = `
+          <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <span>En tu lista de deseos</span>
+        `;
+        btn.classList.remove('bg-rose-600', 'hover:bg-rose-700');
+        btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      } else {
+        btn.innerHTML = `
+          <svg class="w-4 h-4 stroke-white fill-none stroke-2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 trabajo-ejercicio-112s9-4.78 9-12z" /></svg>
+          <span>Añadir a deseos</span>
+        `;
+        btn.classList.add('bg-rose-600', 'hover:bg-rose-700');
+        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+      }
+    }
+
+    // Cerrar modal con tecla Escape o clic fuera
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target.id === 'modal') {
+        closeModal();
+      }
+    });
+
+    // Inicializar catálogo al cargar página
+    window.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
+    });
+  </script>
+</body>
+</html>
